@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WSA Practice — UW Foster School</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #f0f4fa;
+    --bg2: #e8eef8;
+    --surface: rgba(255,255,255,0.72);
+    --surface-solid: #ffffff;
+    --surface2: rgba(255,255,255,0.45);
+    --glass: rgba(255,255,255,0.55);
+    --glass-strong: rgba(255,255,255,0.82);
+    --border: rgba(186,210,245,0.6);
+    --border-strong: rgba(100,160,240,0.35);
+    --text: #0f1c2e;
+    --text-muted: #5a7090;
+    --text-light: #8aA5c0;
+    --blue: #1a6edb;
+    --blue-light: #3b8ef0;
+    --blue-pale: #ddeeff;
+    --blue-mid: rgba(26,110,219,0.1);
+    --success: #0e7c5b;
+    --danger: #d9363e;
+    --shadow-sm: 0 1px 4px rgba(20,60,120,0.06), 0 2px 12px rgba(20,60,120,0.04);
+    --shadow: 0 4px 20px rgba(20,60,120,0.08), 0 1px 4px rgba(20,60,120,0.05);
+    --shadow-lg: 0 12px 40px rgba(20,60,120,0.14), 0 2px 8px rgba(20,60,120,0.06);
+    --shadow-glass: 0 8px 32px rgba(20,60,120,0.10), inset 0 1px 0 rgba(255,255,255,0.8);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(100,170,255,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(160,200,255,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 40% at 60% 30%, rgba(200,225,255,0.10) 0%, transparent 50%);
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--glass-strong);
+    backdrop-filter: blur(20px) saturate(1.6);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 58px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.9), var(--shadow-sm);
+  }
+  .header-logo {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--blue);
+    letter-spacing: -0.01em;
+  }
+  .header-logo span { color: var(--text-muted); font-style: italic; }
+
+  nav { display: flex; gap: 0; }
+  nav button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.83rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding: 0 1.2rem;
+    height: 58px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  nav button:hover { color: var(--text); }
+  nav button.active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+  }
+
+  /* ── Main layout ── */
+  main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+  /* ── Page sections ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Glass card mixin ── */
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-glass);
+  }
+
+  /* ── HOME page ── */
+  .home-hero {
+    text-align: center;
+    padding: 3.5rem 0 2.5rem;
+  }
+  .home-hero h1 {
+    font-family: var(--font-display);
+    font-size: 3.2rem;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  .home-hero h1 em {
+    font-style: italic;
+    color: var(--blue);
+  }
+  .home-hero p {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .info-card {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--blue-light);
+    padding: 1.4rem 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-glass);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  .info-card h3 {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .info-card ul {
+    list-style: none;
+    font-size: 0.86rem;
+    color: var(--text-muted);
+    line-height: 1.9;
+  }
+  .info-card ul li::before { content: "· "; color: var(--blue-light); font-weight: 700; }
+
+  .start-btn {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.8rem 2.4rem;
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(26,110,219,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .start-btn:hover {
+    background: var(--blue-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(26,110,219,0.40);
+  }
+
+  /* ── RUBRIC section on home ── */
+  .rubric-section {
+    margin-top: 3rem;
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+  }
+  .rubric-section h2 {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    margin-bottom: 1.25rem;
+    color: var(--text);
+    font-weight: 400;
+  }
+  .rubric-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+  .rtab {
+    padding: 0.35rem 1.1rem;
+    border: 1px solid var(--border);
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+    color: var(--text-muted);
+  }
+  .rtab:hover { color: var(--text); }
+  .rtab.active { background: var(--blue); color: #fff; border-color: var(--blue); box-shadow: 0 2px 10px rgba(26,110,219,0.3); }
+  .rubric-table { display: none; }
+  .rubric-table.active { display: table; width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.84rem; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .rubric-table th { background: var(--blue); color: #fff; padding: 0.65rem 1rem; text-align: left; font-weight: 500; font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .rubric-table td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; background: var(--glass-strong); }
+  .rubric-table tr:last-child td { border-bottom: none; }
+  .rubric-table tr:nth-child(even) td { background: rgba(240,247,255,0.8); }
+  .score-badge {
+    display: inline-block;
+    padding: 0.18rem 0.65rem;
+    border-radius: 100px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .s6 { background: #d1f5e8; color: #0a5c3a; }
+  .s5 { background: #daeeff; color: #0a4080; }
+  .s4 { background: #fff0cc; color: #7a5a00; }
+  .s3 { background: #ffe4c8; color: #7a3a00; }
+  .s2 { background: #ffd8d8; color: #7a1010; }
+  .s1 { background: #f5c8c8; color: #600a0a; }
+
+  /* ── PRACTICE page ── */
+  .practice-select h2 {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    font-weight: 400;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+  }
+  .practice-select p { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem; }
+
+  .test-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  .test-card {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-glass);
+    cursor: pointer;
+    transition: all 0.22s;
+    position: relative;
+    overflow: hidden;
+  }
+  .test-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 60%);
+    pointer-events: none;
+    border-radius: var(--radius);
+  }
+  .test-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-strong);
+    background: var(--glass-strong);
+  }
+  .test-card h3 {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+  }
+  .test-card .desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 1rem; }
+  .tag {
+    display: inline-block;
+    padding: 0.15rem 0.65rem;
+    border-radius: 100px;
+    font-size: 0.71rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    margin-right: 0.3rem;
+    letter-spacing: 0.02em;
+  }
+  .tag-p { background: rgba(255,200,100,0.2); color: #7a5000; border: 1px solid rgba(255,200,100,0.4); }
+  .tag-pos { background: var(--blue-mid); color: var(--blue); border: 1px solid rgba(26,110,219,0.2); }
+  .tag-both { background: rgba(26,110,219,0.08); color: var(--blue); border: 1px solid rgba(26,110,219,0.18); }
+
+  /* ── TEST TAKING view ── */
+  #test-view { display: none; }
+  #test-view.active { display: block; }
+
+  .test-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--glass-strong);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    padding: 0.85rem 1.5rem;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-glass);
+  }
+  .test-title {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  #timer {
+    font-family: var(--font-mono);
+    font-size: 1.7rem;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    transition: color 0.3s;
+  }
+  #timer.warn { color: #d97706; }
+  #timer.danger { color: var(--danger); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+  .timer-controls { display: flex; gap: 0.5rem; align-items: center; }
+  .btn-sm {
+    padding: 0.38rem 1rem;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 500;
+    border: 1px solid var(--border-strong);
+    background: var(--glass);
+    backdrop-filter: blur(8px);
+    color: var(--text);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-sm:hover { background: var(--glass-strong); border-color: var(--blue); color: var(--blue); }
+  .btn-sm.primary { background: var(--blue); color: #fff; border-color: var(--blue); box-shadow: 0 2px 10px rgba(26,110,219,0.3); }
+  .btn-sm.primary:hover { background: var(--blue-light); }
+
+  /* ── Task tabs (test + review) ── */
+  .task-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .task-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.85rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    font-family: var(--font-body);
+  }
+  .task-tab:hover { background: var(--glass-strong); border-color: var(--border-strong); }
+  .task-tab.active {
+    background: var(--blue);
+    border-color: var(--blue);
+    box-shadow: 0 4px 16px rgba(26,110,219,0.3);
+  }
+  .tab-num {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-light);
+    width: 24px;
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+  .task-tab.active .tab-num { color: rgba(255,255,255,0.7); }
+  .tab-info { flex: 1; }
+  .tab-label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+  .task-tab.active .tab-label { color: #fff; }
+  .tab-sub {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
+    transition: color 0.2s;
+  }
+  .task-tab.active .tab-sub { color: rgba(255,255,255,0.7); }
+  .tab-wc {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-light);
+    background: rgba(255,255,255,0.5);
+    padding: 0.18rem 0.6rem;
+    border-radius: 100px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    border: 1px solid var(--border);
+  }
+  .task-tab.active .tab-wc {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* Full-height single task panel */
+  .task-panel {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-glass);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .task-panel.active-panel {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 320px);
+  }
+  .task-panel.active-panel .essay { min-height: 400px; }
+
+  /* ── Review full page ── */
+  .review-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+  .review-page-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--text);
+  }
+  .review-full-panel { }
+  .review-split {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  @media(max-width: 900px) {
+    .review-split { grid-template-columns: 1fr; }
+  }
+  .review-essay-col, .review-grade-col { }
+  .review-col-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .review-essay {
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: var(--text);
+    background: var(--glass-strong);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    padding: 1.25rem 1.4rem;
+    border-radius: var(--radius);
+    white-space: pre-wrap;
+    min-height: calc(100vh - 380px);
+    overflow-y: auto;
+    box-shadow: var(--shadow-glass);
+  }
+  .grading-panel {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.4rem;
+    box-shadow: var(--shadow-glass);
+    position: sticky;
+    top: 76px;
+  }
+  .task-panel-header {
+    padding: 0.85rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(26,110,219,0.06);
+  }
+  .task-panel-header h3 {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  .task-panel-header .task-subtitle { font-size: 0.76rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+  .prompt-box {
+    padding: 1rem 1.2rem;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    max-height: 240px;
+    overflow-y: auto;
+    background: rgba(255,255,255,0.5);
+  }
+  .prompt-box strong { font-weight: 600; display: block; margin-bottom: 0.4rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--blue); }
+
+  textarea.essay {
+    flex: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 1.1rem 1.2rem;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: var(--text);
+    background: rgba(255,255,255,0.6);
+    min-height: 300px;
+  }
+  textarea.essay:focus { background: rgba(255,255,255,0.85); }
+  textarea.essay::placeholder { color: var(--text-light); }
+
+  .word-count {
+    padding: 0.4rem 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-light);
+    border-top: 1px solid var(--border);
+    background: rgba(240,247,255,0.6);
+    text-align: right;
+  }
+
+  .submit-row {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 0.7rem 1.8rem;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-radius: 100px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(26,110,219,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: var(--blue-light); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(26,110,219,0.4); }
+  .btn-secondary {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 0.7rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--border-strong); color: var(--text); background: var(--glass-strong); }
+
+  /* ── PAST TESTS page ── */
+  .past-empty {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--text-muted);
+  }
+  .past-empty h3 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: 400; }
+
+  .past-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .past-card {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: var(--shadow-glass);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .past-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-lg); transform: translateX(2px); background: var(--glass-strong); }
+  .past-card-info h4 { font-size: 0.92rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .past-card-info .meta { font-size: 0.78rem; color: var(--text-muted); }
+  .past-card-scores { display: flex; gap: 0.6rem; align-items: center; }
+  .score-chip {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    min-width: 64px;
+  }
+  .score-chip .label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); display: block; font-family: var(--font-body); }
+  .score-chip .val { font-weight: 500; color: var(--text); font-size: 0.88rem; }
+
+  /* ── REVIEW modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,30,60,0.45);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 200;
+    overflow-y: auto;
+    padding: 2rem;
+  }
+  .modal-overlay.active { display: flex; align-items: flex-start; justify-content: center; }
+  .modal {
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    max-width: 840px;
+    width: 100%;
+    box-shadow: 0 24px 64px rgba(10,30,80,0.2);
+    overflow: hidden;
+  }
+  .modal-header {
+    background: var(--blue);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-header h2 { font-family: var(--font-body); font-size: 0.95rem; font-weight: 500; color: #fff; }
+  .modal-close {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    line-height: 1;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.25); }
+  .modal-body { padding: 1.5rem; }
+
+  .review-section { margin-bottom: 1.75rem; }
+  .review-section h3 {
+    font-family: var(--font-body);
+    font-size: 0.71rem;
+    font-weight: 600;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .review-essay {
+    font-size: 0.87rem;
+    line-height: 1.8;
+    color: var(--text);
+    background: rgba(240,247,255,0.5);
+    border: 1px solid var(--border);
+    padding: 1rem 1.1rem;
+    border-radius: var(--radius-sm);
+    white-space: pre-wrap;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+
+  /* Grading UI */
+  .grading-panel {
+    background: rgba(240,247,255,0.5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.1rem 1.2rem;
+    margin-top: 0.75rem;
+  }
+  .grading-panel h4 { font-size: 0.82rem; font-weight: 600; margin-bottom: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .score-select-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .score-select-row label { font-size: 0.82rem; font-weight: 500; min-width: 110px; color: var(--text-muted); }
+  .score-select-row select {
+    padding: 0.38rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.84rem;
+    background: rgba(255,255,255,0.8);
+    color: var(--text);
+    outline: none;
+  }
+  .score-select-row select:focus { border-color: var(--blue); }
+  .feedback-box {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.84rem;
+    line-height: 1.6;
+    background: rgba(255,255,255,0.75);
+    color: var(--text);
+    resize: vertical;
+    min-height: 75px;
+    outline: none;
+  }
+  .feedback-box:focus { border-color: var(--blue); }
+  .save-scores-btn {
+    margin-top: 1rem;
+    background: var(--success);
+    color: #fff;
+    border: none;
+    padding: 0.55rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(14,124,91,0.3);
+  }
+  .save-scores-btn:hover { background: #0a6048; transform: translateY(-1px); }
+
+  /* ── AI Grade button ── */
+  .ai-grade-btn {
+    background: linear-gradient(135deg, rgba(26,110,219,0.12), rgba(100,170,255,0.18));
+    color: var(--blue);
+    border: 1px solid rgba(26,110,219,0.3);
+    padding: 0.38rem 1.1rem;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    border-radius: 100px;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    backdrop-filter: blur(8px);
+    transition: all 0.2s;
+  }
+  .ai-grade-btn:hover { background: var(--blue); color: #fff; border-color: var(--blue); transform: translateY(-1px); box-shadow: 0 3px 12px rgba(26,110,219,0.3); }
+  .ai-grade-btn:disabled { opacity: 0.45; cursor: wait; }
+
+  .ai-result {
+    margin-top: 0.75rem;
+    background: rgba(230,242,255,0.6);
+    border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--blue);
+    padding: 1rem 1.1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.84rem;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    display: none;
+    backdrop-filter: blur(8px);
+  }
+  .ai-result.active { display: block; }
+  .ai-loading {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+    font-style: italic;
+  }
+  .ai-loading.active { display: flex; }
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Confirmation dialog ── */
+  .confirm-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,30,60,0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+  }
+  .confirm-overlay.active { display: flex; }
+  .confirm-box {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem 2.25rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(10,30,80,0.2);
+  }
+  .confirm-box h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 400; margin-bottom: 0.65rem; }
+  .confirm-box p { font-size: 0.86rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.6; }
+  .confirm-box .actions { display: flex; gap: 0.75rem; justify-content: center; }
+
+  /* ── Begin overlay ── */
+  .begin-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,30,60,0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+  }
+  .begin-overlay.active { display: flex; }
+  .begin-box {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2.5rem 3rem;
+    max-width: 480px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(10,30,80,0.2);
+  }
+  .begin-box h2 { font-family: var(--font-display); font-size: 1.9rem; font-weight: 400; margin-bottom: 0.5rem; color: var(--blue); }
+  .begin-box p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem; line-height: 1.7; }
+  .begin-box .time-note {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    background: var(--blue-mid);
+    border: 1px solid rgba(26,110,219,0.2);
+    color: var(--blue);
+    padding: 0.45rem 1.1rem;
+    border-radius: 100px;
+    margin: 1rem 0 1.5rem;
+    display: inline-block;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(100,150,220,0.3); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(100,150,220,0.55); }
+
+  /* ── Time suggestion bar ── */
+  .time-guide {
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.5rem 1.3rem;
+    font-size: 0.77rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .time-guide strong { color: var(--blue); }
+
+  /* ── API Key Banner ── */
+  #api-key-banner {
+    background: rgba(230,242,255,0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.55rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  #api-key-banner .banner-label {
+    font-weight: 500;
+    color: var(--blue);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  #api-key-banner .banner-label svg { flex-shrink: 0; }
+  #api-key-input {
+    flex: 1;
+    min-width: 260px;
+    max-width: 420px;
+    padding: 0.32rem 0.85rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 100px;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    background: rgba(255,255,255,0.85);
+    color: var(--text);
+    outline: none;
+    letter-spacing: 0.03em;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #api-key-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(26,110,219,0.12);
+  }
+  #api-key-input::placeholder { color: var(--text-light); letter-spacing: 0; }
+  #api-key-save {
+    padding: 0.32rem 1rem;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    font-family: var(--font-body);
+    font-size: 0.76rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(26,110,219,0.25);
+  }
+  #api-key-save:hover { background: var(--blue-light); }
+  #api-key-status {
+    font-size: 0.76rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 100px;
+    display: none;
+  }
+  #api-key-status.saved {
+    display: inline-block;
+    background: rgba(14,124,91,0.12);
+    color: var(--success);
+    border: 1px solid rgba(14,124,91,0.25);
+  }
+  #api-key-status.cleared {
+    display: inline-block;
+    background: rgba(217,54,62,0.1);
+    color: var(--danger);
+    border: 1px solid rgba(217,54,62,0.2);
+  }
+  .banner-hint {
+    color: var(--text-light);
+    font-size: 0.74rem;
+  }
+  .banner-hint a { color: var(--blue); text-decoration: none; }
+  .banner-hint a:hover { text-decoration: underline; }
+  #api-key-clear {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 0.74rem;
+    cursor: pointer;
+    padding: 0 0.2rem;
+    transition: color 0.2s;
+    display: none;
+  }
+  #api-key-clear:hover { color: var(--danger); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo">WSA <span>Practice</span></div>
+  <nav>
+    <button class="active" onclick="showPage('home')">Overview</button>
+    <button onclick="showPage('practice')">Practice Tests</button>
+    <button onclick="showPage('past')">Past Tests</button>
+  </nav>
+</header>
+
+<!-- ══ API KEY BANNER ══ -->
+<div id="api-key-banner">
+  <span class="banner-label">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M12 11l8-8"/><path d="M20 3l1 1-4.5 4.5"/><path d="M18.5 8.5l1 1"/></svg>
+    AI Grading Key
+  </span>
+  <input type="password" id="api-key-input" placeholder="gsk_…  (paste your free Groq API key)" autocomplete="off" spellcheck="false" />
+  <button id="api-key-save" onclick="saveApiKey()">Save Key</button>
+  <button id="api-key-clear" onclick="clearApiKey()">✕ Clear</button>
+  <span id="api-key-status"></span>
+  <span class="banner-hint">Free key at <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> — no credit card needed. Stored only in your browser.</span>
+</div>
+
+<main>
+
+  <!-- ══ HOME ══ -->
+  <div id="page-home" class="page active">
+    <div class="home-hero">
+      <h1>University of Washington<br><em>Writing Skills Assessment</em></h1>
+      <p>Practice both writing tasks under timed, exam conditions. No autocorrect. No distractions. Just you and the page.</p>
+      <button class="start-btn" onclick="showPage('practice')">Begin Practice →</button>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Test Structure</h3>
+        <ul>
+          <li>90 minutes total for both tasks</li>
+          <li>Persuasion Task (~55 min suggested)</li>
+          <li>Position Task (~35 min suggested)</li>
+          <li>No dictionaries or calculators</li>
+          <li>No specific knowledge required</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Persuasion Task</h3>
+        <ul>
+          <li>Read a workplace scenario</li>
+          <li>Choose a recommended action</li>
+          <li>Write a persuasive letter</li>
+          <li>Analyze both numerical & verbal data</li>
+          <li>Address objections/counterarguments</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Position Task</h3>
+        <ul>
+          <li>Choose one of two statements</li>
+          <li>Explain the statement in your words</li>
+          <li>Accept, reject, or alter it</li>
+          <li>Use your own examples</li>
+          <li>Address a general audience</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Scoring</h3>
+        <ul>
+          <li>Each task scored 1–6 separately</li>
+          <li>Final score = average of both</li>
+          <li>Example: 3 + 4 = 3.5 overall</li>
+          <li>Score 0 = off-topic or illegible</li>
+          <li>Graded on separate rubrics</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rubric-section">
+      <h2>Scoring Rubrics</h2>
+      <div class="rubric-tabs">
+        <button class="rtab active" onclick="showRubric('persuasion',this)">Persuasion</button>
+        <button class="rtab" onclick="showRubric('position',this)">Position</button>
+      </div>
+
+      <table class="rubric-table active" id="rubric-persuasion">
+        <thead><tr><th>Score</th><th>Label</th><th>Key Criteria</th></tr></thead>
+        <tbody>
+          <tr><td><span class="score-badge s6">6</span></td><td>Outstanding</td><td>Insightful task response; full analysis of both numerical & verbal data; well-organized; fully developed; appropriate style/tone; consistent grammar</td></tr>
+          <tr><td><span class="score-badge s5">5</span></td><td>Strong</td><td>Effective task response; reasonable solution with data analysis; generally well-organized; appropriate examples; facility with written English</td></tr>
+          <tr><td><span class="score-badge s4">4</span></td><td>Adequate</td><td>Addresses task; some data analysis (numerical and/or verbal); organized; generally appropriate style; adequate but inconsistent grammar</td></tr>
+          <tr><td><span class="score-badge s3">3</span></td><td>Limited</td><td>Developing competence; inadequate organization OR limited development; inconsistent tone; limited grammar facility</td></tr>
+          <tr><td><span class="score-badge s2">2</span></td><td>Flawed</td><td>Does not address task effectively; poor organization; thin development; inappropriate style/tone; lacks grammar facility</td></tr>
+          <tr><td><span class="score-badge s1">1</span></td><td>Fundamentally Deficient</td><td>Little evidence of ability; very poor organization; very thin development; inappropriate tone; pervasive errors obscuring meaning</td></tr>
+        </tbody>
+      </table>
+
+      <table class="rubric-table" id="rubric-position">
+        <thead><tr><th>Score</th><th>Label</th><th>Key Criteria</th></tr></thead>
+        <tbody>
+          <tr><td><span class="score-badge s6">6</span></td><td>Outstanding</td><td>Insightful response; well-reasoned position with critical thinking; well-organized; fully developed; compelling style; consistent grammar</td></tr>
+          <tr><td><span class="score-badge s5">5</span></td><td>Strong</td><td>Effective task response; well-reasoned position showing critical thinking; generally organized; appropriate examples; facility with English</td></tr>
+          <tr><td><span class="score-badge s4">4</span></td><td>Adequate</td><td>Addresses task; position with some critical thinking; organized; generally appropriate style for general audience; adequate grammar</td></tr>
+          <tr><td><span class="score-badge s3">3</span></td><td>Limited</td><td>Developing competence; inadequate organization; limited development; inconsistent tone for general audience; limited grammar</td></tr>
+          <tr><td><span class="score-badge s2">2</span></td><td>Flawed</td><td>Does not address task effectively; poor organization; thin development; inappropriate style for general audience; lacks grammar</td></tr>
+          <tr><td><span class="score-badge s1">1</span></td><td>Fundamentally Deficient</td><td>Little evidence of ability; very poor organization; very thin development; inappropriate tone; pervasive errors obscuring meaning</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ PRACTICE ══ -->
+  <div id="page-practice" class="page">
+    <div id="practice-select" class="practice-select">
+      <h2>Choose a Practice Test</h2>
+      <p>Each test contains both a Persuasion Task and a Position Task. You'll have 90 minutes total.</p>
+      <div class="test-cards" id="test-cards-container"></div>
+    </div>
+    <div id="test-view">
+      <div class="test-header">
+        <div class="test-title" id="test-title-display">Practice Test</div>
+        <div id="timer">90:00</div>
+        <div class="timer-controls">
+          <button class="btn-sm" id="pause-btn" onclick="togglePause()">Pause</button>
+          <button class="btn-sm primary" onclick="confirmSubmit()">Submit Test</button>
+        </div>
+      </div>
+
+      <!-- Task tab switcher -->
+      <div class="task-tabs">
+        <button class="task-tab active" id="tab-btn-persuasion" onclick="switchTask('persuasion')">
+          <span class="tab-num">1</span>
+          <span class="tab-info">
+            <span class="tab-label">Persuasion</span>
+            <span class="tab-sub">Write a persuasive letter</span>
+          </span>
+          <span class="tab-wc" id="tab-wc-persuasion">0 words</span>
+        </button>
+        <button class="task-tab" id="tab-btn-position" onclick="switchTask('position')">
+          <span class="tab-num">2</span>
+          <span class="tab-info">
+            <span class="tab-label">Position</span>
+            <span class="tab-sub">Defend a statement</span>
+          </span>
+          <span class="tab-wc" id="tab-wc-position">0 words</span>
+        </button>
+      </div>
+
+      <div class="time-guide">
+        <span id="tg-suggestion">⏱ Suggested: <strong>Persuasion ~55 min</strong> | <strong>Position ~35 min</strong></span>
+        <span>💡 No autocorrect — just like the real exam.</span>
+      </div>
+
+      <!-- Persuasion panel -->
+      <div class="task-panel active-panel" id="panel-persuasion">
+        <div class="task-panel-header">
+          <h3>Task 1 — Persuasion</h3>
+          <div class="task-subtitle">Analyze both numerical and verbal data · Write in letter format · Address objections</div>
+        </div>
+        <div class="prompt-box" id="persuasion-prompt"></div>
+        <textarea class="essay" id="persuasion-answer" spellcheck="false" autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Begin writing your letter here. Use 'Dear [Name],' as your salutation and 'Sincerely, [Your Role]' as your closing."></textarea>
+        <div class="word-count" id="persuasion-wc">0 words</div>
+      </div>
+
+      <!-- Position panel -->
+      <div class="task-panel" id="panel-position" style="display:none">
+        <div class="task-panel-header">
+          <h3>Task 2 — Position</h3>
+          <div class="task-subtitle">Explain the statement · State your stance · Support with 2+ examples</div>
+        </div>
+        <div class="prompt-box" id="position-prompt"></div>
+        <textarea class="essay" id="position-answer" spellcheck="false" autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Begin writing your essay here. Explain the statement, state your position, and support with at least two examples."></textarea>
+        <div class="word-count" id="position-wc">0 words</div>
+      </div>
+
+      <div class="submit-row">
+        <button class="btn-secondary" onclick="confirmAbandon()">← Back to Tests</button>
+        <button class="btn-primary" onclick="confirmSubmit()">Submit & Save Test →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAST TESTS ══ -->
+  <div id="page-past" class="page">
+
+    <!-- List view -->
+    <div id="past-list-view">
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:400;margin-bottom:0.4rem;">Past Tests</h2>
+      <p style="color:var(--text-muted);margin-bottom:2rem;font-size:0.9rem;">Click any entry to review your essays and grade your work.</p>
+      <div id="past-list-container"></div>
+    </div>
+
+    <!-- Full-page review view -->
+    <div id="past-review-view" style="display:none">
+      <div class="review-page-header">
+        <button class="btn-secondary" onclick="closeReview()">← All Tests</button>
+        <h2 id="review-page-title">Test Review</h2>
+        <div style="width:120px"></div>
+      </div>
+
+      <!-- Review task tabs -->
+      <div class="task-tabs" style="margin-bottom:1.25rem;">
+        <button class="task-tab active" id="review-tab-btn-persuasion" onclick="switchReviewTab('persuasion')">
+          <span class="tab-num">1</span>
+          <span class="tab-info">
+            <span class="tab-label">Persuasion</span>
+            <span class="tab-sub">Essay + Grading</span>
+          </span>
+          <span class="tab-wc" id="review-score-chip-persuasion">—</span>
+        </button>
+        <button class="task-tab" id="review-tab-btn-position" onclick="switchReviewTab('position')">
+          <span class="tab-num">2</span>
+          <span class="tab-info">
+            <span class="tab-label">Position</span>
+            <span class="tab-sub">Essay + Grading</span>
+          </span>
+          <span class="tab-wc" id="review-score-chip-position">—</span>
+        </button>
+      </div>
+
+      <!-- Persuasion review panel -->
+      <div id="review-panel-persuasion" class="review-full-panel">
+        <div class="review-split">
+          <div class="review-essay-col">
+            <div class="review-col-label">Your Essay</div>
+            <div class="review-essay" id="rv-persuasion-essay"></div>
+          </div>
+          <div class="review-grade-col">
+            <div class="review-col-label">Grading</div>
+            <div class="grading-panel">
+              <div class="score-select-row">
+                <label>Self-Score (1–6)</label>
+                <select id="p-score-rv" onchange="liveScoreUpdate('persuasion', this.value)">
+                  <option value="">—</option>
+                  <option value="1">1 — Deficient</option>
+                  <option value="2">2 — Flawed</option>
+                  <option value="3">3 — Limited</option>
+                  <option value="4">4 — Adequate</option>
+                  <option value="5">5 — Strong</option>
+                  <option value="6">6 — Outstanding</option>
+                </select>
+              </div>
+              <textarea class="feedback-box" id="p-feedback-rv" placeholder="Self-notes on your persuasion essay…"></textarea>
+              <div style="display:flex;gap:0.6rem;margin-top:0.85rem;align-items:center;flex-wrap:wrap;">
+                <button class="ai-grade-btn" id="ai-p-btn-rv" onclick="aiGradeReview('persuasion')">✦ AI Grade</button>
+                <button class="save-scores-btn" onclick="saveReviewScores()">Save</button>
+              </div>
+              <div class="ai-loading" id="ai-p-loading-rv"><div class="spinner"></div> Analyzing…</div>
+              <div class="ai-result" id="ai-p-result-rv"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Position review panel -->
+      <div id="review-panel-position" class="review-full-panel" style="display:none">
+        <div class="review-split">
+          <div class="review-essay-col">
+            <div class="review-col-label">Your Essay</div>
+            <div class="review-essay" id="rv-position-essay"></div>
+          </div>
+          <div class="review-grade-col">
+            <div class="review-col-label">Grading</div>
+            <div class="grading-panel">
+              <div class="score-select-row">
+                <label>Self-Score (1–6)</label>
+                <select id="pos-score-rv" onchange="liveScoreUpdate('position', this.value)">
+                  <option value="">—</option>
+                  <option value="1">1 — Deficient</option>
+                  <option value="2">2 — Flawed</option>
+                  <option value="3">3 — Limited</option>
+                  <option value="4">4 — Adequate</option>
+                  <option value="5">5 — Strong</option>
+                  <option value="6">6 — Outstanding</option>
+                </select>
+              </div>
+              <textarea class="feedback-box" id="pos-feedback-rv" placeholder="Self-notes on your position essay…"></textarea>
+              <div style="display:flex;gap:0.6rem;margin-top:0.85rem;align-items:center;flex-wrap:wrap;">
+                <button class="ai-grade-btn" id="ai-pos-btn-rv" onclick="aiGradeReview('position')">✦ AI Grade</button>
+                <button class="save-scores-btn" onclick="saveReviewScores()">Save</button>
+              </div>
+              <div class="ai-loading" id="ai-pos-loading-rv"><div class="spinner"></div> Analyzing…</div>
+              <div class="ai-result" id="ai-pos-result-rv"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /past-review-view -->
+  </div>
+
+<!-- ══ CONFIRM SUBMIT ══ -->
+<div class="confirm-overlay" id="confirm-submit-overlay">
+  <div class="confirm-box">
+    <h3>Submit Your Test?</h3>
+    <p>Your answers will be saved. You can review and self-grade them in the Past Tests tab.</p>
+    <div class="actions">
+      <button class="btn-secondary" onclick="closeConfirmSubmit()">Keep Writing</button>
+      <button class="btn-primary" onclick="doSubmit()">Submit →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONFIRM ABANDON ══ -->
+<div class="confirm-overlay" id="confirm-abandon-overlay">
+  <div class="confirm-box">
+    <h3>Leave the Test?</h3>
+    <p>Your current writing will be lost. Are you sure?</p>
+    <div class="actions">
+      <button class="btn-secondary" onclick="document.getElementById('confirm-abandon-overlay').classList.remove('active')">Stay</button>
+      <button class="btn-primary" style="background:#555" onclick="doAbandon()">Leave</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BEGIN OVERLAY ══ -->
+<div class="begin-overlay" id="begin-overlay">
+  <div class="begin-box">
+    <h2 id="begin-test-name">Practice Test 1</h2>
+    <p>You are about to begin a timed WSA practice session.</p>
+    <p>The timer will start as soon as you click <strong>Begin</strong>.</p>
+    <div class="time-note">⏱ 90:00 minutes | No autocorrect | No spell-check</div>
+    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1.5rem;">Tip: Read both prompts first, outline briefly, then write. Leave 5 min at the end to reread and revise.</p>
+    <button class="btn-primary" onclick="startTest()" style="font-size:1rem;padding:0.8rem 2.5rem;">Begin Test →</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════
+const TESTS = [
+  {
+    id: 1,
+    name: "Practice Test 1",
+    tags: ["both"],
+    desc: "Career crossroads scenario + majority opinion statement",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Becca Johnston is at a crossroads. She has been working out of her home in Boise, Idaho, making gold-plated holiday ornaments for the past three years, ever since she gave up work as a real estate agent. That job had been too demanding for the mother of pre-school twins. "You have to work at it all the time," she complained to a friend and real estate agent, Mei Nguyen. The pace of the holiday ornament business is more predictable, and she loves the creativity it requires. In the spring Johnston solicits custom orders and works on designs. In the summer she communicates with a supplier on the East Coast. In the fall she advertises her ornaments and processes orders. In November she and her husband, who works full time at his own automobile repair shop, pack and ship ornaments out of their basement. Profits for last year were $30,000, about double those of the year before.
+
+But Johnston misses being around people and would like to earn more money. Now that her kids are in school, she is considering becoming a residential real estate appraiser. Johnston estimates start-up costs at about $10,000—to cover a 75-hour licensing course, business stationery, professional association dues, and cameras. She has read an estimate of typical annual revenues of $40,000, based on completing four appraisals a week at $200 each. The city of Boise has recently experienced a growth in population and a rise in demand for new homes.
+
+Johnston asks Nguyen for advice. Should she stick with the ornaments or make the career change into real estate appraisal?
+
+<em>In the role of Mei Nguyen, write a letter to Becca Johnston persuading her of the direction you think she should take.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence given in the prompt. Consider the pros and cons of your position, and directly address objections your reader might have.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>The opinion of the majority is not the final proof of what is right.</em>
+
+B. <em>There is no rule without an exception.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 2,
+    name: "Practice Test 2",
+    tags: ["both"],
+    desc: "Boutique acquisition scenario + law & creativity statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Kathy Edwards and Ellen Randall own an upscale children's clothing boutique, Mes Enfants, near an exclusive residential district. They are supplied by wholesale warehouses and independent craftspeople who create custom orders. These orders have created loyal customers and the shop is gaining in reputation. Sales revenue has increased, on average, by 12 percent in each of the last four years, when sales reached $200,000. Last week the partners learned their lease is not being renewed and they must find a new location within six months.
+
+They were approached by national chain Kidswear, which is offering $400,000 for the business. The contract would hire Edwards and Randall as managers at $40,000 each (about 15% less than they made last year), plus 3% of profit. The chain would adopt its corporate business plan and provide shop space and advertising.
+
+Randall wants to keep the boutique and rent nearby space, though monthly rent would increase from $1,100 to $2,000 and they'd need to pay $10,000 to remodel. She values the special orders that draw loyal customers, even though special orders account for less than 20% of profit. Edwards, who manages daily operations, feels connecting with the larger company would provide financial stability and allow them to keep their three part-time employees.
+
+The partners have sought business consultant Julia Simmons, asking each to write a letter persuading her their approach is best.
+
+<em>In the role of EITHER Kathy Edwards (arguing to accept Kidswear's offer) OR Ellen Randall (arguing to reopen the boutique independently), write a persuasive letter to Julia Simmons.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>The citizen's first duty is to obey the laws of the nation.</em>
+
+B. <em>Dependability and predictability are synonymous with creative stagnation.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 3,
+    name: "Practice Test 3",
+    tags: ["both"],
+    desc: "Restaurant expansion scenario + risk and innovation statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Marcus Tran has operated a successful Vietnamese restaurant, Pho Saigon, in Seattle's Capitol Hill neighborhood for seven years. Annual revenue has grown steadily from $280,000 to its current $420,000. Marcus employs 12 full-time and part-time staff and recently paid off his original $150,000 small business loan.
+
+A commercial real estate broker has approached Marcus with two opportunities. Option A: Lease a second restaurant location in Bellevue's growing tech corridor. Monthly rent would be $8,500 (vs. his current $3,200), but foot traffic data shows 40% higher weekday lunch demand due to nearby corporate offices. Buildout costs are estimated at $85,000. Option B: Expand catering services. Startup equipment costs would be approximately $35,000, and industry data suggests that a restaurant of his size can generate $80,000–$120,000 in annual catering revenue. A catering operation would require hiring two additional full-time staff at $42,000 each annually.
+
+Marcus's business advisor, Diana Cho, notes that the tech corridor has seen 22% revenue growth for new restaurants in the past two years but that second-location failure rates run about 35% in the first three years. Marcus asks her which option—or neither—makes the most business sense.
+
+<em>In the role of Diana Cho, write a letter to Marcus Tran persuading him of the best course of action.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>The greatest risk in life is never taking one.</em>
+
+B. <em>Technology solves problems faster than it creates them.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 4,
+    name: "Practice Test 4",
+    tags: ["both"],
+    desc: "Remote work policy scenario + leadership and ethics statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Sandra Reyes is the COO of Northgate Analytics, a 75-person data consulting firm based in Portland, Oregon. Since 2020 the company has operated fully remote, saving an estimated $180,000 annually in office lease costs. Employee satisfaction surveys show 78% of employees rate remote work as "highly important" to their job satisfaction, and voluntary turnover has dropped from 18% to 9% since going remote. However, a recent internal productivity audit found that cross-team project completion rates declined 14% compared to pre-remote baselines, and three major clients have raised concerns about communication delays.
+
+The board is now proposing two options. Option A: Return to a mandatory in-office schedule five days a week. The company would need to sign a new office lease estimated at $22,000/month. A compensation consultant estimates the firm would need to increase average salaries by 8% (current average: $75,000) to retain talent unwilling to return to the office. Option B: Implement a structured hybrid model — three days in-office, two days remote — using shared co-working space at $9,500/month, avoiding long-term lease risk.
+
+Reyes asks HR Director James Whitfield to write a recommendation.
+
+<em>In the role of James Whitfield, write a memo-style persuasive letter to Sandra Reyes recommending one of the two options or proposing a reasoned alternative.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>A leader's most important quality is the ability to inspire, not to manage.</em>
+
+B. <em>In business, ethical behavior is ultimately more profitable than unethical behavior.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 5,
+    name: "Practice Test 5",
+    tags: ["both"],
+    desc: "Bookstore digital pivot scenario + competition and tradition statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Patricia Okafor has owned Pages & Co., an independent bookstore in Olympia, Washington, for eleven years. Annual revenue is currently $310,000, down from a peak of $395,000 four years ago, which she attributes to competition from online retailers and e-books. Her current lease costs $2,800/month. Okafor employs six part-time staff at an average of $16/hour. She has built a loyal local following, particularly through a weekly author reading series that averages 60 attendees and generates roughly $2,000/month in event-night book sales.
+
+Her accountant has presented two directions. Option A: Pivot to a hybrid retail-event space model. This would require a $45,000 renovation to create a flexible event area, installation of a café corner (estimated $18,000), and hiring one full-time events coordinator at $38,000/year. Industry data suggests that hybrid bookstore-café models average 20–30% higher annual revenue than traditional bookstores of comparable size. Option B: Build an e-commerce presence and reduce the physical footprint by subleasing 40% of the store space for $800/month. E-commerce setup costs are estimated at $12,000, and similar independent stores have reported online sales replacing 15–25% of lost in-store revenue within two years.
+
+Okafor asks her accountant, Raymond Park, which path is more viable for long-term sustainability.
+
+<em>In the role of Raymond Park, write a letter to Patricia Okafor persuading her of the best direction.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>Competition improves the quality of everything it touches.</em>
+
+B. <em>Preserving tradition is more important than embracing change.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 6,
+    name: "Practice Test 6",
+    tags: ["both"],
+    desc: "Home buying dilemma (Robert & Irina) + manners & leadership statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Robert and his wife, Irina, are considering buying a house. He has recently begun a new job and earns $40,000 a year. Irina is a contract worker for a publishing company, and though she brings in $30,000–$40,000 a year, her income is not stable.
+
+Together, Robert and Irina have about $10,000 in credit card debt, $80,000 in student loans, and a car loan with an outstanding principal of $9,500 at an interest rate of 5.75%. The rent for their apartment is $1,000 per month.
+
+Irina thinks paying rent is like throwing money away. Instead of rent, she would rather that money go towards a mortgage. She also says her mother will loan them $10,000 for a down payment on a house.
+
+Even so, Robert is concerned that buying a house in this economy is too risky. He wants to pay off more of their debt before buying a house and wait until the housing market stabilizes. Irina disagrees, saying that now, when housing prices are falling, is the best time to buy a house.
+
+<em>In the role of Robert and Irina's financial advisor, compose an e-mail to Robert and Irina in which you recommend a course of action. Should they buy a house, like Irina urges? Should they pay down debts and wait? Or might there be a different approach?</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence given in the prompt. Consider the pros and cons of your position, and directly address objections your reader might have.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>The recent decline in manners is having a serious impact on today's society.</em>
+
+B. <em>The key component of being successful in leadership is the ability to make confident decisions.</em>
+
+<strong>Directions:</strong> Write an essay in which you agree or disagree with the statement you choose. Explain what you think the statement means. Discuss why you would accept, reject, or alter it. Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 7,
+    name: "Practice Test 7",
+    tags: ["both"],
+    desc: "Inheritance windfall scenario (Steve) + cell phones in school statement",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Steve has just inherited $5,000 from a distant relative, and he is having trouble deciding what to do with the money. Unfortunately for Steve, he has a rather impulsive personality. He is considering buying lottery tickets, going to a casino to try to win more money, investing in the stock market, or even donating some of the money to charity. He is even talking about using the money to travel overseas.
+
+Steve would like your advice. What do you think he should do with the money? There are some other things you should know about Steve: He owes over $5,000 on his credit cards and also on his car.
+
+<em>As Steve's friend, write an e-mail to him in which you advise him how to spend his money. You can advise him to spend it all, save it, donate it, pay down debt, or do any combination of these options.</em>
+
+<em>Clearly state your position and use reasons and examples to be persuasive. Your writing must include analysis of both the numerical and verbal evidence given in the prompt. Consider the pros and cons of your position, and directly address objections your reader might have.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>Children should not be allowed to bring cell phones to school.</em>
+
+B. <em>Social media does more harm than good to personal relationships.</em>
+
+<strong>Directions:</strong> Write an essay in which you agree or disagree with the statement you choose. Explain what you think the statement means. Discuss why you would accept, reject, or alter it. Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 8,
+    name: "Practice Test 8",
+    tags: ["both"],
+    desc: "Language learning advice for Rebecca + success and failure statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Rebecca is a high school senior who is interested in pursuing a career in international business. Though she has fulfilled her foreign language requirements with two years of Spanish, she does not plan on studying Spanish or any other language in college. Rebecca knows that English is nearly essential to the business world, and she figures that all of her future clients and business partners will speak English.
+
+<em>Write to Rebecca as if you were writing an e-mail. In your e-mail, urge Rebecca to learn another language. Tell her why she should learn another language, even if most of her co-workers and clients speak English. Also, choose a specific language that you think would be especially helpful for her to become fluent in. Should she continue her study of Spanish, or should she learn a different language?</em>
+
+<em>Be sure to support your case with reasons and examples. Consider the pros and cons of your position, and directly address objections your reader might have.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>Failure is a more valuable teacher than success.</em>
+
+B. <em>A person's character is revealed more clearly in adversity than in prosperity.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 9,
+    name: "Practice Test 9",
+    tags: ["both"],
+    desc: "Startup hiring dilemma + education and ambition statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Diane Chen is the founder of a two-year-old Seattle tech startup, Loopwise, which builds project management software for small businesses. The company currently has 11 employees and annual recurring revenue of $620,000, up from $280,000 the year before. Diane has received a seed investment of $400,000 and needs to decide how to allocate it.
+
+Her operations manager recommends hiring two experienced senior engineers at $130,000 each annually to accelerate product development. A recruiter estimates onboarding costs per hire at $8,000. Her marketing consultant, however, argues that the product is already competitive and that the bigger gap is awareness — she recommends spending $200,000 on a 12-month digital marketing campaign that past clients in similar markets used to achieve 40–60% revenue growth within a year.
+
+Diane also knows that keeping a cash reserve is critical: her monthly burn rate is $38,000, and she wants to maintain at least six months of runway.
+
+<em>In the role of Diane's business advisor, write a letter to Diane Chen recommending how she should allocate the $400,000 investment.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>A college education is no longer necessary for professional success.</em>
+
+B. <em>Ambition, left unchecked, causes more harm than good.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 10,
+    name: "Practice Test 10",
+    tags: ["both"],
+    desc: "Nonprofit expansion decision + justice and individual responsibility statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Maria Delgado is the executive director of Bright Path, a Tacoma-based nonprofit that provides after-school tutoring to low-income middle school students. The organization currently serves 120 students across two sites with an annual operating budget of $480,000, funded through a mix of grants (65%), individual donations (25%), and a city contract (10%).
+
+Maria has been offered two opportunities. Option A: Open a third tutoring site in a neighboring district that has identified 200 students in need. Estimated startup costs are $75,000 (renovations and equipment), and ongoing annual costs would increase the budget by $140,000. A regional education foundation has offered a one-time $60,000 grant to support the expansion. Option B: Invest $90,000 in a new digital tutoring platform that would allow the organization to serve up to 80 additional students remotely at a marginal per-student cost of $300/year, compared to the current in-person cost of approximately $1,100/student/year.
+
+Maria's board chair, Dr. James Osei, has asked her to present a recommendation at next month's board meeting.
+
+<em>In the role of Maria Delgado, write a letter to Dr. James Osei making the case for the option you believe best serves Bright Path's mission and financial sustainability.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>Justice and equality are not the same thing, and treating them as such does more harm than good.</em>
+
+B. <em>Individuals, not institutions, are ultimately responsible for solving society's problems.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  }
+  ,
+  {
+    id: 11,
+    name: "Practice Test 11",
+    tags: ["both"],
+    desc: "Coffee shop franchise vs. independence + privacy & free speech statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Tomás Rivera has run an independent coffee shop, Grounds & Glory, in Spokane, Washington for four years. His shop is well-loved locally and has earned a loyal customer base. Annual revenue is currently $310,000, and after rent of $2,400/month, staff wages, and supplies, his net profit is approximately $42,000 per year.
+
+A regional franchise company, BrewCo, has approached Tomás with an offer to buy into their franchise system. As a BrewCo franchisee, Tomás would pay a one-time franchise fee of $35,000 and an ongoing royalty of 6% of gross revenue. In exchange, BrewCo provides national brand recognition, a proven supply chain, marketing support, and a training program for staff. BrewCo franchisees in comparable markets average $480,000 in annual revenue. However, Tomás would be required to follow BrewCo's standardized menu and store design, eliminating much of what makes his shop unique.
+
+Tomás's business mentor, Carol Huang, has asked him to think carefully before deciding.
+
+<em>In the role of Carol Huang, write a letter to Tomás Rivera recommending whether he should join the BrewCo franchise or remain independent.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>The right to privacy is more important than the right to free speech.</em>
+
+B. <em>Convenience has made modern life worse, not better.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 12,
+    name: "Practice Test 12",
+    tags: ["both"],
+    desc: "Family medical practice modernization + loyalty and meritocracy statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Dr. Angela Park is a family physician who has run a small private practice in Bellevue, Washington for twelve years. The practice sees approximately 1,800 patients annually and generates $920,000 in revenue. Dr. Park employs a staff of six, including two nurses and an office manager. Her lease costs $4,100/month.
+
+Dr. Park is weighing two major decisions. Option A: Join a large regional healthcare network, PacificCare Group. PacificCare would purchase the practice for $500,000 and employ Dr. Park at a guaranteed salary of $210,000/year. She would lose ownership but gain access to PacificCare's administrative infrastructure, malpractice coverage, and a patient referral network of 120,000 patients. Option B: Invest $95,000 in upgrading to a modern electronic health records system and telehealth platform, which industry data suggests can reduce administrative overhead by 18% and increase patient capacity by up to 25%.
+
+Dr. Park asks her financial advisor, Neil Torres, for a recommendation.
+
+<em>In the role of Neil Torres, write a letter to Dr. Angela Park recommending the option you believe is in her best long-term interest.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>Loyalty to an organization is an outdated and often self-destructive value.</em>
+
+B. <em>A meritocracy sounds fair in theory but is rarely fair in practice.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 13,
+    name: "Practice Test 13",
+    tags: ["both"],
+    desc: "Event venue sustainability upgrade + tradition vs. progress statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Priya Nambiar manages operations for The Cascade Room, a mid-sized event venue in Seattle that hosts approximately 180 events per year — primarily weddings, corporate gatherings, and nonprofit galas. Annual revenue is $1.2 million. Operating costs, including a staff of 14 and a lease of $11,500/month, total approximately $870,000, yielding a net operating income of $330,000.
+
+A sustainability consulting firm has presented Priya with two options to reduce the venue's environmental footprint. Option A: Install a solar panel system and energy-efficient HVAC at a total cost of $160,000. The upgrade is projected to reduce utility costs by $28,000 annually and qualifies for a federal tax credit of $48,000. Option B: Transition to a zero-waste catering and event model — compostable materials, local sourcing, and waste diversion staffing — at a setup cost of $40,000 and an ongoing increase in catering costs of about $12,000/year. Market research suggests eco-certified venues command a 10–15% premium on bookings and attract a growing segment of environmentally conscious corporate clients.
+
+Priya presents both options to the venue's owner, David Lim, and asks for guidance.
+
+<em>In the role of David Lim, write a letter to Priya Nambiar recommending which option — or combination — the venue should pursue.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>Progress always comes at the cost of something worth preserving.</em>
+
+B. <em>It is better to be respected than to be liked.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 14,
+    name: "Practice Test 14",
+    tags: ["both"],
+    desc: "College athletics program budget decision + fairness and conformity statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Westridge University is a mid-sized private university with an enrollment of 8,400 students. The athletic department operates on an annual budget of $4.2 million and fields 18 varsity sports teams. Over the past three years, declining ticket sales and reduced alumni donations have created a $600,000 annual budget shortfall.
+
+The university's provost, Dr. Sandra Obi, has presented the athletic director, Kevin Marsh, with two options. Option A: Cut the four lowest-funded varsity programs — cross country, swimming, golf, and wrestling — eliminating approximately $520,000 in annual costs and allowing the remaining programs to maintain current funding levels. Option B: Restructure the entire athletic department by reducing coaching staff salaries across all sports by an average of 12% (current average coaching salary: $68,000), renegotiating vendor contracts, and capping per-athlete travel budgets, projected to save approximately $580,000 annually without eliminating any programs.
+
+Kevin must present his recommendation to the university's board of trustees next week.
+
+<em>In the role of Kevin Marsh, write a letter to Dr. Sandra Obi recommending the option you believe best serves the university's students and long-term interests.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>True fairness sometimes requires treating people differently, not the same.</em>
+
+B. <em>Conformity is the enemy of innovation.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  },
+  {
+    id: 15,
+    name: "Practice Test 15",
+    tags: ["both"],
+    desc: "Urban farm business crossroads + work-life balance and short-term thinking statements",
+    persuasion: {
+      scenario: `<strong>Prompt:</strong> Jordan and Mia Ellison co-own Rootstock Farm, a small urban farming operation in Tacoma that grows and sells organic produce to local restaurants, a farmers market, and a 45-member community-supported agriculture (CSA) subscription program. Last year the farm generated $148,000 in revenue. After labor, supplies, and their lease of $1,800/month on a 2-acre plot, net profit was $19,000.
+
+A local grocery cooperative, NorthWest Fresh, has offered to purchase all of Rootstock's produce output under a two-year wholesale contract at a guaranteed $130,000/year. Taking the deal would eliminate the farmers market and CSA operations, simplifying the business significantly. However, the wholesale price represents a 12% discount from their current blended average price per unit, and Jordan and Mia would need to increase production capacity — estimated at a one-time investment of $22,000 in equipment.
+
+Alternatively, their accountant suggests they could grow the CSA program from 45 to 90 members at minimal cost, which based on current pricing would add roughly $27,000 in annual revenue.
+
+Jordan and Mia ask their business mentor, Dr. Fatima Osei, for advice.
+
+<em>In the role of Dr. Fatima Osei, write a letter to Jordan and Mia Ellison recommending the path you believe is best for Rootstock Farm's future.</em>
+
+<em>Your writing must include analysis of both the numerical and verbal evidence. Consider pros and cons and address possible objections.</em>`
+    },
+    position: {
+      scenario: `<strong>Choose ONE statement:</strong>
+
+A. <em>Work-life balance is a personal responsibility, not an employer's obligation.</em>
+
+B. <em>Short-term thinking is the root cause of most long-term problems.</em>
+
+<strong>Directions:</strong> Compose a unified essay in which you: (1) Explain what you think the statement means. (2) Discuss why you would accept, reject, or alter it. (3) Support your position with reasoning and examples from history or current affairs, academic studies, or your own observations.
+
+There is no right or wrong position. Your response will be evaluated on the strength of your analysis, how insightfully you support your position, your organization, and how clearly you express your ideas.`
+    }
+  }
+];
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let timerInterval = null;
+let secondsLeft = 90 * 60;
+let isPaused = false;
+let currentTest = null;
+let testStartTime = null;
+let pendingTestId = null;
+
+function getPastTests() {
+  try { return JSON.parse(localStorage.getItem('wsa_past_tests') || '[]'); }
+  catch(e) { return []; }
+}
+function savePastTests(arr) {
+  localStorage.setItem('wsa_past_tests', JSON.stringify(arr));
+}
+
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const idx = ['home','practice','past'].indexOf(page);
+  document.querySelectorAll('nav button')[idx].classList.add('active');
+
+  if (page === 'practice') {
+    renderTestCards();
+    showPracticeSelect();
+  }
+  if (page === 'past') renderPastList();
+}
+
+function showPracticeSelect() {
+  document.getElementById('practice-select').style.display = 'block';
+  document.getElementById('test-view').classList.remove('active');
+  stopTimer();
+}
+
+// ═══════════════════════════════════════════════
+//  TEST CARDS
+// ═══════════════════════════════════════════════
+function renderTestCards() {
+  const container = document.getElementById('test-cards-container');
+  container.innerHTML = TESTS.map(t => `
+    <div class="test-card" onclick="openBeginOverlay(${t.id})">
+      <h3>${t.name}</h3>
+      <p class="desc">${t.desc}</p>
+      <span class="tag tag-both">Persuasion + Position</span>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  BEGIN OVERLAY
+// ═══════════════════════════════════════════════
+function openBeginOverlay(testId) {
+  pendingTestId = testId;
+  const t = TESTS.find(x => x.id === testId);
+  document.getElementById('begin-test-name').textContent = t.name;
+  document.getElementById('begin-overlay').classList.add('active');
+}
+
+function startTest() {
+  document.getElementById('begin-overlay').classList.remove('active');
+  const t = TESTS.find(x => x.id === pendingTestId);
+  loadTest(t);
+}
+
+function loadTest(t) {
+  currentTest = t;
+  testStartTime = new Date();
+  document.getElementById('practice-select').style.display = 'none';
+  document.getElementById('test-view').classList.add('active');
+  document.getElementById('test-title-display').textContent = t.name;
+  document.getElementById('persuasion-prompt').innerHTML = t.persuasion.scenario;
+  document.getElementById('position-prompt').innerHTML = t.position.scenario;
+  document.getElementById('persuasion-answer').value = '';
+  document.getElementById('position-answer').value = '';
+  updateWordCount('persuasion');
+  updateWordCount('position');
+
+  // Start on persuasion tab
+  switchTask('persuasion');
+
+  secondsLeft = 90 * 60;
+  isPaused = false;
+  document.getElementById('pause-btn').textContent = 'Pause';
+  updateTimerDisplay();
+  startTimer();
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════════════
+//  TIMER
+// ═══════════════════════════════════════════════
+function startTimer() {
+  stopTimer();
+  timerInterval = setInterval(() => {
+    if (!isPaused) {
+      secondsLeft--;
+      updateTimerDisplay();
+      if (secondsLeft <= 0) {
+        stopTimer();
+        alert('Time is up! Your test will now be submitted.');
+        doSubmit();
+      }
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+}
+
+function togglePause() {
+  isPaused = !isPaused;
+  document.getElementById('pause-btn').textContent = isPaused ? 'Resume' : 'Pause';
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('timer');
+  const m = Math.floor(secondsLeft / 60);
+  const s = secondsLeft % 60;
+  el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  el.className = '';
+  if (secondsLeft <= 300) el.classList.add('danger');
+  else if (secondsLeft <= 900) el.classList.add('warn');
+}
+
+// ═══════════════════════════════════════════════
+//  TASK TABS (during test)
+// ═══════════════════════════════════════════════
+let activeTask = 'persuasion';
+function switchTask(task) {
+  activeTask = task;
+  ['persuasion','position'].forEach(t => {
+    document.getElementById('tab-btn-' + t).classList.toggle('active', t === task);
+    const panel = document.getElementById('panel-' + t);
+    panel.style.display = t === task ? 'flex' : 'none';
+    if (t === task) panel.classList.add('active-panel');
+    else panel.classList.remove('active-panel');
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  WORD COUNT
+// ═══════════════════════════════════════════════
+document.addEventListener('input', e => {
+  if (e.target.id === 'persuasion-answer') updateWordCount('persuasion');
+  if (e.target.id === 'position-answer') updateWordCount('position');
+});
+
+function updateWordCount(task) {
+  const val = document.getElementById(task + '-answer').value.trim();
+  const count = val ? val.split(/\s+/).length : 0;
+  const label = count + ' word' + (count !== 1 ? 's' : '');
+  document.getElementById(task + '-wc').textContent = label;
+  // also update tab badge
+  const tabWc = document.getElementById('tab-wc-' + task);
+  if (tabWc) tabWc.textContent = label;
+}
+
+// ═══════════════════════════════════════════════
+//  SUBMIT
+// ═══════════════════════════════════════════════
+function confirmSubmit() {
+  document.getElementById('confirm-submit-overlay').classList.add('active');
+}
+function closeConfirmSubmit() {
+  document.getElementById('confirm-submit-overlay').classList.remove('active');
+}
+
+function doSubmit() {
+  closeConfirmSubmit();
+  stopTimer();
+  const timeUsed = Math.round((new Date() - testStartTime) / 1000);
+  const record = {
+    id: Date.now(),
+    testId: currentTest.id,
+    testName: currentTest.name,
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    timeUsed: timeUsed,
+    persuasionAnswer: document.getElementById('persuasion-answer').value,
+    positionAnswer: document.getElementById('position-answer').value,
+    persuasionScore: null,
+    positionScore: null,
+    persuasionFeedback: '',
+    positionFeedback: '',
+  };
+  const past = getPastTests();
+  past.unshift(record);
+  savePastTests(past);
+  showPage('past');
+}
+
+function confirmAbandon() {
+  document.getElementById('confirm-abandon-overlay').classList.add('active');
+}
+function doAbandon() {
+  document.getElementById('confirm-abandon-overlay').classList.remove('active');
+  stopTimer();
+  showPracticeSelect();
+}
+
+// ═══════════════════════════════════════════════
+//  PAST TESTS
+// ═══════════════════════════════════════════════
+function renderPastList() {
+  // Make sure list view is shown, review hidden
+  document.getElementById('past-list-view').style.display = 'block';
+  document.getElementById('past-review-view').style.display = 'none';
+
+  const container = document.getElementById('past-list-container');
+  const past = getPastTests();
+  if (!past.length) {
+    container.innerHTML = `<div class="past-empty"><h3>No tests yet</h3><p>Complete a practice test and it will appear here for review.</p></div>`;
+    return;
+  }
+  container.innerHTML = `<div class="past-list">${past.map(r => `
+    <div class="past-card" onclick="openReview(${r.id})">
+      <div class="past-card-info">
+        <h4>${r.testName}</h4>
+        <div class="meta">${r.date} &nbsp;·&nbsp; ${formatTime(r.timeUsed)} elapsed</div>
+      </div>
+      <div class="past-card-scores">
+        <div class="score-chip">
+          <span class="label">Persuasion</span>
+          <span class="val">${r.persuasionScore !== null ? r.persuasionScore : '—'}</span>
+        </div>
+        <div class="score-chip">
+          <span class="label">Position</span>
+          <span class="val">${r.positionScore !== null ? r.positionScore : '—'}</span>
+        </div>
+        <div class="score-chip">
+          <span class="label">Overall</span>
+          <span class="val">${(r.persuasionScore !== null && r.positionScore !== null) ? ((r.persuasionScore + r.positionScore)/2).toFixed(1) : '—'}</span>
+        </div>
+      </div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}m ${sec}s`;
+}
+
+// ═══════════════════════════════════════════════
+//  FULL-PAGE REVIEW
+// ═══════════════════════════════════════════════
+let currentReviewId = null;
+
+function openReview(recordId) {
+  const past = getPastTests();
+  const r = past.find(x => x.id === recordId);
+  if (!r) return;
+  currentReviewId = recordId;
+
+  document.getElementById('past-list-view').style.display = 'none';
+  document.getElementById('past-review-view').style.display = 'block';
+  document.getElementById('review-page-title').textContent = r.testName + ' — ' + r.date;
+
+  // Fill essays
+  document.getElementById('rv-persuasion-essay').innerHTML = escHtml(r.persuasionAnswer) || '<em style="color:#aaa">No response written.</em>';
+  document.getElementById('rv-position-essay').innerHTML = escHtml(r.positionAnswer) || '<em style="color:#aaa">No response written.</em>';
+
+  // Fill scores
+  document.getElementById('p-score-rv').value = r.persuasionScore || '';
+  document.getElementById('pos-score-rv').value = r.positionScore || '';
+  document.getElementById('p-feedback-rv').value = r.persuasionFeedback || '';
+  document.getElementById('pos-feedback-rv').value = r.positionFeedback || '';
+
+  // Update tab chips
+  document.getElementById('review-score-chip-persuasion').textContent = r.persuasionScore ? r.persuasionScore + '/6' : '—';
+  document.getElementById('review-score-chip-position').textContent = r.positionScore ? r.positionScore + '/6' : '—';
+
+  // Clear any previous AI results
+  ['ai-p-result-rv','ai-pos-result-rv'].forEach(id => {
+    const el = document.getElementById(id);
+    el.textContent = ''; el.classList.remove('active');
+  });
+
+  switchReviewTab('persuasion');
+  window.scrollTo(0, 0);
+}
+
+function closeReview() {
+  currentReviewId = null;
+  renderPastList();
+}
+
+function switchReviewTab(tab) {
+  ['persuasion','position'].forEach(t => {
+    document.getElementById('review-tab-btn-' + t).classList.toggle('active', t === tab);
+    document.getElementById('review-panel-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+}
+
+function liveScoreUpdate(task, val) {
+  const chipId = 'review-score-chip-' + task;
+  document.getElementById(chipId).textContent = val ? val + '/6' : '—';
+}
+
+function saveReviewScores() {
+  if (!currentReviewId) return;
+  const past = getPastTests();
+  const idx = past.findIndex(x => x.id === currentReviewId);
+  if (idx === -1) return;
+  const ps = document.getElementById('p-score-rv').value;
+  const poss = document.getElementById('pos-score-rv').value;
+  past[idx].persuasionScore = ps ? parseInt(ps) : null;
+  past[idx].positionScore = poss ? parseInt(poss) : null;
+  past[idx].persuasionFeedback = document.getElementById('p-feedback-rv').value;
+  past[idx].positionFeedback = document.getElementById('pos-feedback-rv').value;
+  savePastTests(past);
+  // visual flash
+  const btn = event.target;
+  const orig = btn.textContent;
+  btn.textContent = '✓ Saved';
+  btn.style.background = 'var(--success)';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1800);
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+function escBt(str) {
+  if (!str) return '';
+  return str.replace(/`/g,"'").replace(/\\/g,'').substring(0, 4000);
+}
+
+// ═══════════════════════════════════════════════
+//  API KEY MANAGEMENT
+// ═══════════════════════════════════════════════
+function getApiKey() {
+  return localStorage.getItem('wsa_anthropic_key') || '';
+}
+function saveApiKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val) { alert('Please paste your API key first.'); return; }
+  if (!val.startsWith('gsk_')) {
+    alert('That doesn\'t look like a Groq key (should start with gsk_). Get one free at console.groq.com');
+    return;
+  }
+  localStorage.setItem('wsa_anthropic_key', val);
+  showKeyStatus('saved', '✓ Key saved');
+  document.getElementById('api-key-input').value = '●'.repeat(18);
+  document.getElementById('api-key-clear').style.display = 'inline';
+}
+function clearApiKey() {
+  localStorage.removeItem('wsa_anthropic_key');
+  document.getElementById('api-key-input').value = '';
+  document.getElementById('api-key-clear').style.display = 'none';
+  showKeyStatus('cleared', 'Key cleared');
+}
+function showKeyStatus(cls, msg) {
+  const el = document.getElementById('api-key-status');
+  el.className = cls;
+  el.textContent = msg;
+  el.style.display = 'inline-block';
+  setTimeout(() => { el.style.display = 'none'; el.className = ''; }, 3000);
+}
+function initKeyBanner() {
+  const key = getApiKey();
+  if (key) {
+    document.getElementById('api-key-input').value = '●'.repeat(18);
+    document.getElementById('api-key-clear').style.display = 'inline';
+  }
+  document.getElementById('api-key-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') saveApiKey();
+  });
+  document.getElementById('api-key-input').addEventListener('focus', e => {
+    if (e.target.value.startsWith('●')) e.target.value = '';
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  AI GRADING (review page)
+// ═══════════════════════════════════════════════
+async function aiGradeReview(taskType) {
+  if (!currentReviewId) return;
+  const past = getPastTests();
+  const r = past.find(x => x.id === currentReviewId);
+  if (!r) return;
+
+  const essay = taskType === 'persuasion' ? r.persuasionAnswer : r.positionAnswer;
+  if (!essay || essay.trim().length < 30) {
+    alert('No essay to grade for this task.');
+    return;
+  }
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    alert('Paste your free Groq API key in the bar at the top first.\n\nGet one free at console.groq.com — sign up with Google or email, no credit card.');
+    return;
+  }
+
+  const test = TESTS.find(x => x.id === r.testId);
+  const prompt = test ? (taskType === 'persuasion' ? test.persuasion.scenario : test.position.scenario) : '';
+
+  const btnId = taskType === 'persuasion' ? 'ai-p-btn-rv' : 'ai-pos-btn-rv';
+  const loadingId = taskType === 'persuasion' ? 'ai-p-loading-rv' : 'ai-pos-loading-rv';
+  const resultId = taskType === 'persuasion' ? 'ai-p-result-rv' : 'ai-pos-result-rv';
+
+  const btn = document.getElementById(btnId);
+  const loading = document.getElementById(loadingId);
+  const result = document.getElementById(resultId);
+  btn.disabled = true;
+  loading.classList.add('active');
+  result.classList.remove('active');
+  result.textContent = '';
+
+  const rubric = taskType === 'persuasion' ? `PERSUASION RUBRIC (1-6):
+6-Outstanding: Insightful; full analysis of BOTH numerical AND verbal data; well-organized; fully developed; appropriate style/tone; consistent grammar.
+5-Strong: Effective; reasonable solution with both data types analyzed; generally well-organized; appropriate examples.
+4-Adequate: Addresses task; some data analysis; organized; generally appropriate style; adequate but inconsistent grammar.
+3-Limited: Developing competence; inadequate organization OR limited development; inconsistent tone; limited grammar.
+2-Flawed: Does not address task; poor organization; thin development; inappropriate style.
+1-Deficient: Little evidence of ability; very poor organization; pervasive errors.
+Requirements: Letter format (Dear X / Sincerely Y). Analyze BOTH numerical AND verbal data. Address pros/cons and counterarguments.`
+  : `POSITION RUBRIC (1-6):
+6-Outstanding: Insightful; well-reasoned with critical thinking; well-organized; fully developed; compelling style; consistent grammar.
+5-Strong: Effective; well-reasoned with critical thinking; generally organized; appropriate examples.
+4-Adequate: Addresses task; some critical thinking; organized; appropriate for general audience; adequate grammar.
+3-Limited: Developing competence; inadequate organization; limited development; inconsistent tone.
+2-Flawed: Does not address task; poor organization; thin development; inappropriate style.
+1-Deficient: Little evidence of ability; very poor organization; pervasive errors.
+Requirements: EXPLAIN statement in own words. STATE position (accept/reject/alter). Use AT LEAST TWO specific examples. Analyze how examples support position.`;
+
+  const systemPrompt = `You are a WSA grader for the UW Foster School of Business. Grade essays fairly and constructively using the official rubric.`;
+  const userPrompt = `Grade this ${taskType} essay.\n\nPROMPT:\n${escBt(prompt)}\n\nESSAY:\n${essay.substring(0,4000)}\n\n${rubric}\n\nProvide:\n1. SUGGESTED SCORE: [1-6] — [label]\n2. RATIONALE (2-3 sentences referencing rubric criteria)\n3. STRENGTHS (2-3 specific things done well)\n4. AREAS FOR IMPROVEMENT (2-3 actionable suggestions)\n5. EXAMPLE REVISION: Take one weak sentence and rewrite it stronger.\n\nBe specific, reference actual text. Under 400 words total.`;
+
+  try {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant',
+        max_tokens: 1000,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ]
+      })
+    });
+    const data = await response.json();
+    if (data.error) {
+      result.textContent = `API Error: ${data.error.message}\n\nCheck your key at console.groq.com`;
+    } else {
+      result.textContent = data.choices?.[0]?.message?.content || 'No response received.';
+    }
+    result.classList.add('active');
+  } catch(e) {
+    result.textContent = 'Network error — check your internet connection and API key.';
+    result.classList.add('active');
+  } finally {
+    btn.disabled = false;
+    loading.classList.remove('active');
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  RUBRIC TABS
+// ═══════════════════════════════════════════════
+function showRubric(type, btn) {
+  document.querySelectorAll('.rubric-table').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.rtab').forEach(b => b.classList.remove('active'));
+  document.getElementById('rubric-' + type).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+renderTestCards();
+initKeyBanner();
+</script>
+</body>
+</html>
